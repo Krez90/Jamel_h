@@ -6,7 +6,9 @@ if(isset($_POST['inscription'])){
     $nom = htmlspecialchars($_POST['nom']);
     $prenom = htmlspecialchars($_POST['prenom']);
     $mail = htmlspecialchars($_POST['mail']);
+    $mail = strtolower($mail);
     $mail2 = htmlspecialchars($_POST['mail2']);
+    $mail2 = strtolower($mail2);
     $mdp = sha1($_POST['mdp']);
     $mdp2 = sha1 ($_POST['mdp2']);
         if(!empty($_POST['nom']) && !empty($_POST['prenom']) && !empty($_POST['mail']) && !empty($_POST['mail2']) && !empty($_POST['mdp']) && !empty($_POST['mdp2'])){
@@ -33,6 +35,7 @@ if(isset($_POST['inscription'])){
         }else{
             $erreur = "Vos adresses mails ne correspondent pas !";
         }
+/////////////////////////////////////Vérification des doublons//////////////////////////////////////
         $reqmail = $bdd->prepare("SELECT * FROM client WHERE mail = ?");
         $reqmail->execute([$mail]);
         $mailexist = $reqmail->rowCount();

@@ -8,29 +8,38 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h','root','');
      $requser = $bdd->prepare("SELECT * FROM client WHERE id = ?");
      $requser->execute([$_SESSION['id']]);
      $user = $requser->fetch();
-////////////// Modification du profil de l'utilisateur dans la base de donnée et sur son compte = NOM
-     if(isset($_POST['newnom']) AND !empty($_POST['newnom']) AND $_POST['newnom'] != $_user['nom']){
+//////////////Modification du profil de l'utilisateur dans la base de donnée NOM//////////////////
+     if(isset($_POST['newnom']) AND !empty($_POST['newnom']) AND $_POST['newnom'] != $user['nom']){
          $newnom = htmlspecialchars($_POST['newnom']);
          $insertnom = $bdd->prepare("UPDATE client SET nom = ? WHERE id = ?");
          $insertnom->execute([$newnom, $_SESSION['id']]);
+         $erreur = "Votre profil à bien été mise à jour";
  ////////////////////////On le redirige vers son profil//////////////////////////////////////
-         header("Location: profil.php?id=".$_SESSION['id']);
+        //  header("Location: profil.php?id=".$_SESSION['id']);
      }
-////////////////////////Modification du prénom//////////////////////////////////////
-     if(isset($_POST['newprenom']) AND !empty($_POST['newprenom']) AND $_POST['newprenom'] != $_user['prenom']){
+////////////////////////Modification du Prénom//////////////////////////////////////
+     if(isset($_POST['newprenom']) AND !empty($_POST['newprenom']) AND $_POST['newprenom'] != $user['prenom']){
         $newprenom = htmlspecialchars($_POST['newprenom']);
-        $insertnom = $bdd->prepare("UPDATE client SET prenom = ? WHERE id = ?");
-        $insertnom->execute([$prenom, $_SESSION['id']]);
+        $insertprenom = $bdd->prepare("UPDATE client SET prenom = ? WHERE id = ?");
+        $insertprenom->execute([$newprenom, $_SESSION['id']]);
+        $erreur = "Votre profil à bien été mise à jour";
 
-        header("Location: profil.php?id=".$_SESSION['id']);
     }
 ////////////////////////Modification du Mail//////////////////////////////////////
-    if(isset($_POST['newmail']) AND !empty($_POST['newmail']) AND $_POST['newmail'] != $_user['nom']){
+    if(isset($_POST['newmail']) AND !empty($_POST['newmail']) AND $_POST['newmail'] != $user['mail']){
         $newmail = htmlspecialchars($_POST['newmail']);
-        $insertnom = $bdd->prepare("UPDATE client SET mail = ? WHERE id = ?");
-        $insertnom->execute([$newmail, $_SESSION['id']]);
+        $newmail = strtolower($newmail);
+        $reqmail = $bdd->prepare("SELECT * FROM client WHERE mail = ?");
+        $reqmail->execute([$newmail]);
+        $mailexist = $reqmail->rowCount();
+        if($mailexist == 0){
+            $insertmail = $bdd->prepare("UPDATE client SET mail = ? WHERE id = ?");
+            $insertmail->execute([$newmail, $_SESSION['id']]);
+            $erreur = "Votre profil à bien été mise à jour";
+        }else{
+            $erreur = "Adresse mail déjà utilisée ! ";
+        }
 
-        header("Location: profil.php?id=".$_SESSION['id']);                
     }
 ////////////////////////Modification du mot de passe//////////////////////////////////////
 if(isset($_POST['newmdp1']) AND !empty($_POST['newmdp1']) AND isset($_POST['newmdp2']) AND !empty($_POST['newmdp2'])){
@@ -40,15 +49,14 @@ if(isset($_POST['newmdp1']) AND !empty($_POST['newmdp1']) AND isset($_POST['newm
     if($mdp1 == $mdp2){
         $insertmdp = $bdd->prepare("UPDATE client SET password = ? WHERE id = ?");
         $insertmdp->execute([$mdp1, $_SESSION['id']]);
-        header("Location: profil.php?id=".$_SESSION['id']);  
-        
+        $erreur = "Votre profil à bien été mise à jour";
+          
     }
     else{
         $erreur = "Vos mots de passes ne correspondent pas";
     }
               
 }
- 
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -67,12 +75,16 @@ if(isset($_POST['newmdp1']) AND !empty($_POST['newmdp1']) AND isset($_POST['newm
         <form method="POST" action="">
         <label>Nom</label>
             <input type="text" name="newnom" placeholder="Nom" value="<?php echo $user['nom']?>"><br>
+
             <label>Prénom</label>
             <input type="text" name="newprenom" placeholder="Prenom" value="<?php echo $user['prenom']?>"><br>
+
             <label>Email</label>
             <input type="email" name="newmail" placeholder="Email" value="<?php echo $user['mail']?>"><br>
+
             <label>Mot de passe</label>
             <input type="password" name="newmdp1" placeholder="Mot de passe"><br>
+            
             <label>Confirmation de passe</label>
             <input type="password" name="newmdp2" placeholder="Confirmation du mot de passe"><br>
 
@@ -81,16 +93,14 @@ if(isset($_POST['newmdp1']) AND !empty($_POST['newmdp1']) AND isset($_POST['newm
         <?php
         if(isset($erreur)){echo $erreur;}
         ?>
-
-        <a href = "deconnexion.php"> Se déconnecter</a>
-
     </div>
 
 </body>
 
 </html>
 <?php
-}else{
+}
+else{
     header("Location: connexion.php");
 }
 ?>
