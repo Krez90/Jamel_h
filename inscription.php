@@ -42,7 +42,7 @@ if(isset($_POST['inscription'])){
             $insertmbr = $bdd->prepare("INSERT INTO client (nom, prenom, mail, password) VALUES (?,?,?,?)");
             $insertmbr->execute([$nom, $prenom, $mail, $mdp]);
             $erreur = "Votre compte a bien été crée";
-            header('Location: index.php');
+            
 
         }else{
         $erreur = "Vos mots de passes ne correspondent pas !";
@@ -134,6 +134,10 @@ if(isset($_POST['inscription'])){
         <?php
         if(isset($erreur)){
             echo $erreur;
+        ?>
+        <br>
+        <a href="connexion.php"> Me connecter</a>
+        <?php
         }
         ?>
     </div>
