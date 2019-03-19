@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-$bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h','root','');
+$bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
 //////////////////////////Si il est pas connecter, pas de profil à modifier////////////////
  if(isset($_SESSION['id'])){
 
@@ -22,6 +22,30 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h','root','');
         $newprenom = htmlspecialchars($_POST['newprenom']);
         $insertprenom = $bdd->prepare("UPDATE client SET prenom = ? WHERE id = ?");
         $insertprenom->execute([$newprenom, $_SESSION['id']]);
+        $erreur = "Votre profil à bien été mise à jour";
+
+    }
+//////////////////////////Modif adresse/////////////////////////////////////////////////
+    if(isset($_POST['adresse']) AND !empty($_POST['adresse']) AND $_POST['adresse'] != $user['adresse']){
+        $newadresse = htmlspecialchars($_POST['adresse']);
+        $insertadresse = $bdd->prepare("UPDATE client SET adresse = ? WHERE id = ?");
+        $insertadresse->execute([$newadresse, $_SESSION['id']]);
+        $erreur = "Votre profil à bien été mise à jour";
+
+    }
+////////////////////////Modif code postal/////////////////////////////////////////////////
+    if(isset($_POST['codepostal']) AND !empty($_POST['codepostal']) AND $_POST['codepostal'] != $user['code_postal']){
+        $newcodepostal = htmlspecialchars($_POST['codepostal']);
+        $insertcodepostal = $bdd->prepare("UPDATE client SET code_postal = ? WHERE id = ?");
+        $insertcodepostal->execute([$newcodepostal, $_SESSION['id']]);
+        $erreur = "Votre profil à bien été mise à jour";
+
+    }
+    ////////////////////////Modif pays/////////////////////////////////////////////////
+    if(isset($_POST['pays']) AND !empty($_POST['pays']) AND $_POST['pays'] != $user['pays']){
+        $newpays = htmlspecialchars($_POST['pays']);
+        $insertpays = $bdd->prepare("UPDATE client SET pays = ? WHERE id = ?");
+        $insertpays->execute([$newpays, $_SESSION['id']]);
         $erreur = "Votre profil à bien été mise à jour";
 
     }
@@ -78,6 +102,15 @@ if(isset($_POST['newmdp1']) AND !empty($_POST['newmdp1']) AND isset($_POST['newm
 
             <label>Prénom</label>
             <input type="text" name="newprenom" placeholder="Prenom" value="<?php echo $user['prenom']?>"><br>
+ 
+          <label for=adresse>Adresse</label>
+          <textarea id=adresse name="adresse" rows=5 required value="<?php echo $user['adresse']?>"></textarea><br>
+
+          <label for=codepostal>Code postal</label>
+          <input id=codepostal name="codepostal" type=text required value="<?php echo $user['code_postal']?>"><br>
+
+          <label for=pays>Pays</label>
+          <input id=pays name="pays" type=text required value="<?php echo $user['pays']?>"><br>
 
             <label>Email</label>
             <input type="email" name="newmail" placeholder="Email" value="<?php echo $user['mail']?>"><br>
