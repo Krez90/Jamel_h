@@ -1553,9 +1553,15 @@ header .form-inline {
   width: 100%; }
 
 .card {
+  width: 80%;
   margin-bottom:24px;
   margin-bottom: 1.5rem;
-  border-radius: 0; }
+  border-radius: 0.1; }
+
+  .titre_h1{
+    text-align: center;
+  }
+
   .card h4 {
     font-size:17.6px;
     font-size: 1.1rem; }
@@ -1632,6 +1638,11 @@ header .form-inline {
     padding: 0 7px;
     width: inherit;
     text-align: center; }
+
+.card-body{
+  text-align: center;
+  background-color: #ededed;
+}
 
 .social-buttons .card-body p button {
   padding-top: 0;

@@ -13,7 +13,7 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
              $userinfo = $requser->fetch();
              $_SESSION['id'] = $userinfo['id'];
              $_SESSION['mail'] = $userexist['mail'];
-             header("Location: index.php?id=".$_SESSION['id']);
+             header("Location: profil.php?id=".$_SESSION['id']);
 
          }else{
             $erreur = "Votre mail ou identifiant ne correspondent pas";
@@ -99,7 +99,7 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
                                 <button type="submit" name = "formconnect"  class="btn btn-success btn-flat m-b-30 m-t-30">Se connecter</button>
 
                                 <div class="register-link m-t-15 text-center">
-                                    <p>Vous n'avez pas de compte ? <a href="page-register.php"> Inscrivez-vous ici</a></p>
+                                    <p>Vous n'avez pas de compte ? <a href="index.php"> Inscrivez-vous ici</a></p>
 
                                 </div>
                     </form>

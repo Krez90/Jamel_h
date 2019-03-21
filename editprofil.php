@@ -2,12 +2,85 @@
 session_start();
 
 $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
- if(isset($_GET['id']) && $_GET['id'] > 0){
-    $getid = intval($_GET['id']);
-    $requser = $bdd->prepare("SELECT * FROM client WHERE id = ?");
-    $requser->execute([$getid]);
-    $userinfo = $requser->fetch();
+//////////////////////////Si il est pas connecter, pas de profil à modifier////////////////
+ if(isset($_SESSION['id'])){
+
+     $requser = $bdd->prepare("SELECT * FROM client WHERE id = ?");
+     $requser->execute([$_SESSION['id']]);
+     $user = $requser->fetch();
+//////////////Modification du profil de l'utilisateur dans la base de donnée NOM//////////////////
+     if(isset($_POST['newnom']) AND !empty($_POST['newnom']) AND $_POST['newnom'] != $user['nom']){
+         $newnom = htmlspecialchars($_POST['newnom']);
+         $insertnom = $bdd->prepare("UPDATE client SET nom = ? WHERE id = ?");
+         $insertnom->execute([$newnom, $_SESSION['id']]);
+         $erreur = "Votre profil à bien été mise à jour";
+ ////////////////////////On le redirige vers son profil//////////////////////////////////////
+        //  header("Location: profil.php?id=".$_SESSION['id']);
+     }
+////////////////////////Modification du Prénom//////////////////////////////////////
+     if(isset($_POST['newprenom']) AND !empty($_POST['newprenom']) AND $_POST['newprenom'] != $user['prenom']){
+        $newprenom = htmlspecialchars($_POST['newprenom']);
+        $insertprenom = $bdd->prepare("UPDATE client SET prenom = ? WHERE id = ?");
+        $insertprenom->execute([$newprenom, $_SESSION['id']]);
+        $erreur = "Votre profil à bien été mise à jour";
+
+    }
+//////////////////////////Modif adresse/////////////////////////////////////////////////
+    if(isset($_POST['adresse']) AND !empty($_POST['adresse']) AND $_POST['adresse'] != $user['adresse']){
+        $newadresse = htmlspecialchars($_POST['adresse']);
+        $insertadresse = $bdd->prepare("UPDATE client SET adresse = ? WHERE id = ?");
+        $insertadresse->execute([$newadresse, $_SESSION['id']]);
+        $erreur = "Votre profil à bien été mise à jour";
+
+    }
+////////////////////////Modif code postal/////////////////////////////////////////////////
+    if(isset($_POST['codepostal']) AND !empty($_POST['codepostal']) AND $_POST['codepostal'] != $user['code_postal']){
+        $newcodepostal = htmlspecialchars($_POST['codepostal']);
+        $insertcodepostal = $bdd->prepare("UPDATE client SET code_postal = ? WHERE id = ?");
+        $insertcodepostal->execute([$newcodepostal, $_SESSION['id']]);
+        $erreur = "Votre profil à bien été mise à jour";
+
+    }
+    ////////////////////////Modif pays/////////////////////////////////////////////////
+    if(isset($_POST['pays']) AND !empty($_POST['pays']) AND $_POST['pays'] != $user['pays']){
+        $newpays = htmlspecialchars($_POST['pays']);
+        $insertpays = $bdd->prepare("UPDATE client SET pays = ? WHERE id = ?");
+        $insertpays->execute([$newpays, $_SESSION['id']]);
+        $erreur = "Votre profil à bien été mise à jour";
+
+    }
+////////////////////////Modification du Mail//////////////////////////////////////
+    if(isset($_POST['newmail']) AND !empty($_POST['newmail']) AND $_POST['newmail'] != $user['mail']){
+        $newmail = htmlspecialchars($_POST['newmail']);
+        $newmail = strtolower($newmail);
+        $reqmail = $bdd->prepare("SELECT * FROM client WHERE mail = ?");
+        $reqmail->execute([$newmail]);
+        $mailexist = $reqmail->rowCount();
+        if($mailexist == 0){
+            $insertmail = $bdd->prepare("UPDATE client SET mail = ? WHERE id = ?");
+            $insertmail->execute([$newmail, $_SESSION['id']]);
+            $erreur = "Votre profil à bien été mise à jour";
+        }else{
+            $erreur = "Adresse mail déjà utilisée ! ";
+        }
+
+    }
+////////////////////////Modification du mot de passe//////////////////////////////////////
+if(isset($_POST['newmdp1']) AND !empty($_POST['newmdp1']) AND isset($_POST['newmdp2']) AND !empty($_POST['newmdp2'])){
+    $mdp1 = sha1($_POST['newmdp1']);
+    $mdp2 = sha1($_POST['newmdp2']);
     
+    if($mdp1 == $mdp2){
+        $insertmdp = $bdd->prepare("UPDATE client SET password = ? WHERE id = ?");
+        $insertmdp->execute([$mdp1, $_SESSION['id']]);
+        $erreur = "Votre profil à bien été mise à jour";
+          
+    }
+    else{
+        $erreur = "Vos mots de passes ne correspondent pas";
+    }
+              
+}
 ?>
 <!doctype html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
@@ -60,11 +133,11 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
             <div id="main-menu" class="main-menu collapse navbar-collapse">
                 <ul class="nav navbar-nav">
                     <li class="active">
-                        <a href="index.html"> <i class="menu-icon fa fa-dashboard"></i>Bonjour <?php echo $userinfo['prenom'];?></a>
+                        <a href="index.html"> <i class="menu-icon fa fa-dashboard"></i>Bonjour <?php echo $user['prenom'];?></a>
                     </li>
                     <h3 class="menu-title">Menu</h3><!-- /.menu-title -->
                     <li class="menu-item-has-children dropdown">
-                        <a href="" class="dropdown-toggle"  aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-laptop"></i>Tableau de bord</a>
+                        <a href="profil.php?id=<?php echo $_SESSION['id']?>" class="dropdown-toggle"  aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-laptop"></i>Tableau de bord</a>
 
                     </li>
                     <li class="menu-item-has-children dropdown">
@@ -187,13 +260,13 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
                         </a>
 
                         <div class="user-menu dropdown-menu">
-                            <a class="nav-link" href=""><i class="fa fa-user"></i> Tableau bord</a>
+                            <a class="nav-link" href="profil.php?id=<?php echo $_SESSION['id']?>"><i class="fa fa-user"></i> Tableau bord</a>
 
                             <a class="nav-link" href="#"><i class="fa fa-user"></i> Notifications <span class="count">13</span></a>
 
-                            <a class="nav-link" href="editprofil.php"><i class="fa fa-cog"></i> Profil</a>
+                            <a class="nav-link" href="#"><i class="fa fa-cog"></i> Profil</a>
 
-                            <a class="nav-link" href="deconnexion.php"><i class="fa fa-power-off"></i> Se déconnecter</a>
+                            <a class="nav-link" href="index.php"><i class="fa fa-power-off"></i> Se déconnecter</a>
                         </div>
                     </div> 
 
@@ -241,88 +314,45 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
                 </div>
             </div>
         </div>
-
-  
-            <div class="col-xl-3 col-lg-6">
-                <section class="card">
-                    <div class="twt-feed blue-bg">
-                        <div class="corner-ribon black-ribon">
-                            <i class="fa fa-twitter"></i>
-                        </div>
-                        <div class="fa fa-twitter wtt-mark"></div>
-
-                        <div class="media">
-                            <a href="#">
-                                <img class="align-self-center rounded-circle mr-3" style="width:85px; height:85px;" alt="" src="images/admin.jpg">
-                            </a>
-                            <div class="media-body">
-                                <h2 class="text-white display-6"><?php echo $userinfo['nom'];?><br>
-                                    <?php echo $userinfo['prenom'];?><br></h2>
-                               
-                            </div>
-                        </div>
-                    </div>
-                
-                    <div class="twt-write col-sm-12">
-                        <textarea placeholder="Write your Tweet and Enter" rows="1" class="form-control t-text-area"></textarea>
-                    </div>
-                    <footer class="twt-footer">
-                        <a href="#"><i class="fa fa-camera"></i></a>
-                        <a href="#"><i class="fa fa-map-marker"></i></a>
-                        Belfort, FR
-                        <span class="pull-right">
-                            90
-                        </span>
-                    </footer>
-                </section>
-            </div>
-
-                            <!--Contenu du profil -->
-            <div class="col-xl-3 col-lg-6">
+                   <!--Contenu du profil -->
+            <div class="col-lg-6">
                 <div class="card">
-                    <div class="card-body">
-                        <div class="stat-widget-one">
-                            <div class="stat-icon dib"><i class="fa fa-bell-o"></i></div>
-                            <div class="stat-content dib">
-                                <div class="stat-text">Notifications</div>
-                                <div class="stat-digit">1,012</div>
-                            </div>
+                    <h1 class="titre_h1">Informations personnelles</h1>
+                        <div class="login-form">
+                            <form action="" method="POST">
+                                <div class="form-group">
+                                    <label>Nom</label>
+                                    <input type="text" name="newnom" class="form-control" value="<?php echo $user['nom']?>">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Prenom</label>
+                                    <input type="text" name="newprenom" class="form-control" value="<?php echo $user['prenom']?>">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Adresse Mail</label>
+                                    <input type="email" name="newmail" class="form-control" value="<?php echo $user['mail']?>">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Mot de passe</label>
+                                    <input type="password" name="newmdp1" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Vérification du mot passe</label>
+                                    <input type="password" name="newmdp2" class="form-control">
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-flat m-b-30 m-t-30">Enregistrer</button>
+                                           
+                            </form>
+                            <?php
+                            if(isset($erreur)){echo $erreur;}
+                            ?>
                         </div>
-                    </div>
                 </div>
-            </div>
-
-
-            <div class="col-xl-3 col-lg-6">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="stat-widget-one">
-                            <div class="stat-icon dib"><i class="fa fa-comments-o"></i></div>
-                            <div class="stat-content dib">
-                                <div class="stat-text">Nouveaux Messages</div>
-                                <div class="stat-digit">961</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-3 col-lg-6">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="stat-widget-one">
-                            <div class="stat-icon dib"><i class="ti-layout-grid2 text-warning border-warning"></i></div>
-                            <div class="stat-content dib">
-                                <div class="stat-text">Active Projects</div>
-                                <div class="stat-digit">770</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-        </div> <!-- .content -->
+            </div> <!-- .content -->
     </div><!-- /#right-panel -->
 
     <!-- Right Panel -->
@@ -345,7 +375,9 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
 
 </html>
 <?php
-}else{
-
+}
+else{
+    header("Location: page-login.php");
+   
 }
 ?>

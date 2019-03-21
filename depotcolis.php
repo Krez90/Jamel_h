@@ -2,11 +2,12 @@
 session_start();
 
 $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
- if(isset($_GET['id']) && $_GET['id'] > 0){
-    $getid = intval($_GET['id']);
-    $requser = $bdd->prepare("SELECT * FROM client WHERE id = ?");
-    $requser->execute([$getid]);
-    $userinfo = $requser->fetch();
+//////////////////////////Si il est pas connecter, pas de profil à modifier////////////////
+ if(isset($_SESSION['id'])){
+
+     $requser = $bdd->prepare("SELECT * FROM client WHERE id = ?");
+     $requser->execute([$_SESSION['id']]);
+     $user = $requser->fetch();
     
 ?>
 <!doctype html>
@@ -60,15 +61,15 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
             <div id="main-menu" class="main-menu collapse navbar-collapse">
                 <ul class="nav navbar-nav">
                     <li class="active">
-                        <a href="index.html"> <i class="menu-icon fa fa-dashboard"></i>Bonjour <?php echo $userinfo['prenom'];?></a>
+                        <a href="index.html"> <i class="menu-icon fa fa-dashboard"></i>Bonjour <?php echo $user['prenom'];?></a>
                     </li>
                     <h3 class="menu-title">Menu</h3><!-- /.menu-title -->
                     <li class="menu-item-has-children dropdown">
-                        <a href="" class="dropdown-toggle"  aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-laptop"></i>Tableau de bord</a>
+                        <a href="profil.php?id=<?php echo $_SESSION['id']?>" class="dropdown-toggle"  aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-laptop"></i>Tableau de bord</a>
 
                     </li>
                     <li class="menu-item-has-children dropdown">
-                        <a href="depotcolis.php" class="dropdown-toggle"  aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-table"></i>Mes colis déposé</a>
+                        <a href="" class="dropdown-toggle"  aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-table"></i>Mes colis déposé</a>
 
                     </li>
                     <li class="menu-item-has-children dropdown">
@@ -241,80 +242,20 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
                 </div>
             </div>
         </div>
-
-  
-            <div class="col-xl-3 col-lg-6">
-                <section class="card">
-                    <div class="twt-feed blue-bg">
-                        <div class="corner-ribon black-ribon">
-                            <i class="fa fa-twitter"></i>
-                        </div>
-                        <div class="fa fa-twitter wtt-mark"></div>
-
-                        <div class="media">
-                            <a href="#">
-                                <img class="align-self-center rounded-circle mr-3" style="width:85px; height:85px;" alt="" src="images/admin.jpg">
-                            </a>
-                            <div class="media-body">
-                                <h2 class="text-white display-6"><?php echo $userinfo['nom'];?><br>
-                                    <?php echo $userinfo['prenom'];?><br></h2>
-                               
-                            </div>
-                        </div>
-                    </div>
-                
-                    <div class="twt-write col-sm-12">
-                        <textarea placeholder="Write your Tweet and Enter" rows="1" class="form-control t-text-area"></textarea>
-                    </div>
-                    <footer class="twt-footer">
-                        <a href="#"><i class="fa fa-camera"></i></a>
-                        <a href="#"><i class="fa fa-map-marker"></i></a>
-                        Belfort, FR
-                        <span class="pull-right">
-                            90
-                        </span>
-                    </footer>
-                </section>
-            </div>
-
-                            <!--Contenu du profil -->
-            <div class="col-xl-3 col-lg-6">
+            <div class="col-xl col-lg">
                 <div class="card">
                     <div class="card-body">
                         <div class="stat-widget-one">
-                            <div class="stat-icon dib"><i class="fa fa-bell-o"></i></div>
+                            <div class=""><i class=""></i></div>
                             <div class="stat-content dib">
-                                <div class="stat-text">Notifications</div>
-                                <div class="stat-digit">1,012</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                                <div class="stat-text"><h1>Publier une annonce<h1></div>
+                                 <div></div>
 
-
-            <div class="col-xl-3 col-lg-6">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="stat-widget-one">
-                            <div class="stat-icon dib"><i class="fa fa-comments-o"></i></div>
-                            <div class="stat-content dib">
-                                <div class="stat-text">Nouveaux Messages</div>
-                                <div class="stat-digit">961</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-3 col-lg-6">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="stat-widget-one">
-                            <div class="stat-icon dib"><i class="ti-layout-grid2 text-warning border-warning"></i></div>
-                            <div class="stat-content dib">
-                                <div class="stat-text">Active Projects</div>
-                                <div class="stat-digit">770</div>
+                                
+                                
+                                
+                                
+                                
                             </div>
                         </div>
                     </div>

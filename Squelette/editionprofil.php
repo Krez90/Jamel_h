@@ -134,6 +134,6 @@ if(isset($_POST['newmdp1']) AND !empty($_POST['newmdp1']) AND isset($_POST['newm
 <?php
 }
 else{
-    header("Location: connexion.php");
+    header("Location: Squelette/connexion.php");
 }
 ?>
