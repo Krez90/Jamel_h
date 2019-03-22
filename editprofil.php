@@ -188,7 +188,7 @@ if(isset($_POST['newmdp1']) AND !empty($_POST['newmdp1']) AND isset($_POST['newm
                         <div class="dropdown for-notification">
                             <button class="btn btn-secondary dropdown-toggle" type="button" id="notification" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fa fa-bell"></i>
-                                <span class="count bg-danger">5</span>
+                                <span class="count bg-danger"></span>
                             </button>
                             <div class="dropdown-menu" aria-labelledby="notification">
                                 <p class="red">You have 3 Notification</p>
@@ -212,7 +212,7 @@ if(isset($_POST['newmdp1']) AND !empty($_POST['newmdp1']) AND isset($_POST['newm
                                 id="message"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="ti-email"></i>
-                                <span class="count bg-primary">9</span>
+                                <span class="count bg-primary"></span>
                             </button>
                             <div class="dropdown-menu" aria-labelledby="message">
                                 <p class="red">You have 4 Mails</p>

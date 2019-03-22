@@ -3,12 +3,27 @@ session_start();
 
 $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
 //////////////////////////Si il est pas connecter, pas de profil à modifier////////////////
- if(isset($_SESSION['id'])){
+    if(isset($_SESSION['id'])){
 
      $requser = $bdd->prepare("SELECT * FROM client WHERE id = ?");
      $requser->execute([$_SESSION['id']]);
      $user = $requser->fetch();
-    
+
+    if(isset($_POST['continuer'])){
+
+     $depart = $_POST['depart'];
+     $arriver = $_POST['reception'];
+     $description = $_POST['description'];
+
+     if(isset($_POST['depart']) AND !empty($_POST['depart']) && isset($_POST['reception']) AND !empty($_POST['reception']) && isset($_POST['description']) AND !empty($_POST['description'])){
+        $depart = htmlspecialchars($_POST['depart']);
+        $arriver = htmlspecialchars($_POST['reception']);
+        $description = htmlspecialchars($_POST['description']);
+        $insertcolis = $bdd->prepare("INSERT INTO annonce WHERE (depart, reception, description) VALUES (?,?,?)");
+        $insertcolis->execute([$depart, $arriver, $description]);
+        $erreur = "Votre colis à bien été déposé";
+        }
+    }
 ?>
 <!doctype html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
@@ -116,7 +131,7 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
                         <div class="dropdown for-notification">
                             <button class="btn btn-secondary dropdown-toggle" type="button" id="notification" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fa fa-bell"></i>
-                                <span class="count bg-danger">5</span>
+                                <span class="count bg-danger"></span>
                             </button>
                             <div class="dropdown-menu" aria-labelledby="notification">
                                 <p class="red">You have 3 Notification</p>
@@ -140,7 +155,7 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
                                 id="message"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="ti-email"></i>
-                                <span class="count bg-primary">9</span>
+                                <span class="count bg-primary"></span>
                             </button>
                             <div class="dropdown-menu" aria-labelledby="message">
                                 <p class="red">You have 4 Mails</p>
@@ -242,24 +257,35 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
                 </div>
             </div>
         </div>
-            <div class="col-xl col-lg">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="stat-widget-one">
-                            <div class=""><i class=""></i></div>
-                            <div class="stat-content dib">
-                                <div class="stat-text"><h1>Publier une annonce<h1></div>
-                                 <div></div>
+            <div class="col-md">
+                <div class="stat-text"><h1>Envoyer un colis</div><br>
+                    <div class="card">
+                        <div class="login-form">
+                            <form method="POST">
 
-                                
-                                
-                                
-                                
-                                
-                            </div>
+                                <div class="form-group">
+                                    <label>Départ du colis ?</label>
+                                        <input type="text" name="depart" class="form-control" value="" placeholder="Exemple : 12 rue clé des champs ou hôtel stenda ">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Réception du colis ?</label>
+                                        <input type="text" name="reception" class="form-control" value="" placeholder="Exemple : 12 rue clé des champs ou hôtel stenda">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Description du colis</label>
+                                        <input type="text" name="description" class="form-control" value="" placeholder="Description">
+                                </div>
+
+                                <button type="submit" name="continuer" class="btn btn-primary btn-flat m-b-30 m-t-30">Continuer</button>
+
+                            </form>
+                            <?php
+                            if(isset($erreur)){echo $erreur;}
+                            ?>
                         </div>
                     </div>
-                </div>
             </div>
 
 
@@ -287,6 +313,7 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
 </html>
 <?php
 }else{
+   
 
 }
 ?>
