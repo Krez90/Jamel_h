@@ -2,36 +2,33 @@
 session_start();
 
 $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
-//////////////////////////Si il est pas connecter, pas de profil à modifier////////////////
+
     if(isset($_SESSION['id'])){
 
-     $requser = $bdd->prepare("SELECT * FROM client WHERE id = ?");
+     $requser = $bdd->prepare("SELECT * FROM clients WHERE id = ?");
      $requser->execute([$_SESSION['id']]);
      $user = $requser->fetch();
 
     if(isset($_POST['continuer'])){
-
-     $depart = $_POST['depart'];
-     $arriver = $_POST['reception'];
-     $description = $_POST['description'];
-
-     if(isset($_POST['depart']) AND !empty($_POST['depart']) && isset($_POST['reception']) AND !empty($_POST['reception']) && isset($_POST['description']) AND !empty($_POST['description'])){
+///////////////////////////////////////////////PREPARATION INSERER COLIS BDD/////////////////////////////////////////        
         $depart = htmlspecialchars($_POST['depart']);
         $arriver = htmlspecialchars($_POST['reception']);
         $description = htmlspecialchars($_POST['description']);
-        $insertcolis = $bdd->prepare("INSERT INTO annonce WHERE (depart, reception, description) VALUES (?,?,?)");
+        $user = [$_SESSION['id']];
+        
+        
+    if(!empty($_POST['depart']) AND !empty($_POST['reception']) AND !empty($_POST['description'])){
+        
+        $insertcolis = $bdd->prepare("INSERT INTO annonces (depart, reception, description) VALUES (?,?,?)");
         $insertcolis->execute([$depart, $arriver, $description]);
         $erreur = "Votre colis à bien été déposé";
         }
     }
 ?>
 <!doctype html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
-<!--[if gt IE 8]><!-->
+
 <html class="no-js" lang="fr">
-<!--<![endif]-->
+
 
 <head>
     <meta charset="utf-8">
@@ -313,7 +310,6 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
 </html>
 <?php
 }else{
-   
-
+    
 }
 ?>

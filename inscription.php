@@ -36,13 +36,13 @@ if(isset($_POST['inscription'])){
             $erreur = "Vos adresses mails ne correspondent pas !";
         }
 /////////////////////////////////////Vérification des doublons//////////////////////////////////////
-        $reqmail = $bdd->prepare("SELECT * FROM client WHERE mail = ?");
+        $reqmail = $bdd->prepare("SELECT * FROM clients WHERE mail = ?");
         $reqmail->execute([$mail]);
         $mailexist = $reqmail->rowCount();
         if($mailexist == 0){
 
         if($mdp == $mdp2){
-            $insertmbr = $bdd->prepare("INSERT INTO client (nom, prenom, mail, password) VALUES (?,?,?,?)");
+            $insertmbr = $bdd->prepare("INSERT INTO clients (nom, prenom, mail, password) VALUES (?,?,?,?)");
             $insertmbr->execute([$nom, $prenom, $mail, $mdp]);
             $erreur = "Votre compte a bien été crée";
             

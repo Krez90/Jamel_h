@@ -36,13 +36,13 @@ if(isset($_POST['inscription'])){
             $erreur = "Vos adresses mails ne correspondent pas !";
         }
 /////////////////////////////////////Vérification des doublons//////////////////////////////////////
-        $reqmail = $bdd->prepare("SELECT * FROM client WHERE mail = ?");
+        $reqmail = $bdd->prepare("SELECT * FROM clients WHERE mail = ?");
         $reqmail->execute([$mail]);
         $mailexist = $reqmail->rowCount();
         if($mailexist == 0){
 
         if($mdp == $mdp2){
-            $insertmbr = $bdd->prepare("INSERT INTO client (nom, prenom, mail, password) VALUES (?,?,?,?)");
+            $insertmbr = $bdd->prepare("INSERT INTO clients (nom, prenom, mail, password) VALUES (?,?,?,?)");
             $insertmbr->execute([$nom, $prenom, $mail, $mdp]);
             $erreur = "Votre compte a bien été crée";
             
@@ -62,12 +62,8 @@ if(isset($_POST['inscription'])){
 }
 ?>
 <!doctype html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
-<!--[if gt IE 8]><!-->
+
 <html class="no-js" lang="en">
-<!--<![endif]-->
 
 <head>
     <meta charset="utf-8">
@@ -89,8 +85,6 @@ if(isset($_POST['inscription'])){
     <link rel="stylesheet" href="assets/css/style.css">
 
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
-
-
 
 </head>
 

@@ -6,7 +6,7 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
      $mailconnect = htmlspecialchars($_POST['mailconnect']);
      $mdpconnect = sha1($_POST['mdpconnect']);
      if(!empty($mailconnect) && !empty($mdpconnect)){
-         $requser = $bdd->prepare("SELECT * FROM client WHERE mail = ?  AND password = ?");
+         $requser = $bdd->prepare("SELECT * FROM clients WHERE mail = ?  AND password = ?");
          $requser->execute([$mailconnect, $mdpconnect]);
          $userexist = $requser->rowCount();
          if($userexist == 1){
