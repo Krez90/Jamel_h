@@ -1,0 +1,5 @@
+# Rewrite --- http://localhost/Jamel_H/profil.php?id=24 => http://localhost/Jamel_H/profil/24
+#RewriteEngine On
+#RewriteBase http://localhost/
+#RewriteCond %{QUERY_STRING} (^|&)id=24($|&)
+#RewriteRule ^Jamel_H/profil\.php$ /Jamel_H/profil/24?&%{QUERY_STRING}

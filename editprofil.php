@@ -5,13 +5,13 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
 //////////////////////////Si il est pas connecter, pas de profil à modifier////////////////
  if(isset($_SESSION['id'])){
 
-     $requser = $bdd->prepare("SELECT * FROM clientss WHERE id = ?");
+     $requser = $bdd->prepare("SELECT * FROM clients WHERE id = ?");
      $requser->execute([$_SESSION['id']]);
      $user = $requser->fetch();
 //////////////Modification du profil de l'utilisateur dans la base de donnée NOM//////////////////
      if(isset($_POST['newnom']) AND !empty($_POST['newnom']) AND $_POST['newnom'] != $user['nom']){
          $newnom = htmlspecialchars($_POST['newnom']);
-         $insertnom = $bdd->prepare("UPDATE clientss SET nom = ? WHERE id = ?");
+         $insertnom = $bdd->prepare("UPDATE clients SET nom = ? WHERE id = ?");
          $insertnom->execute([$newnom, $_SESSION['id']]);
          $erreur = "Votre profil à bien été mise à jour";
  ////////////////////////On le redirige vers son profil//////////////////////////////////////
@@ -133,7 +133,7 @@ if(isset($_POST['newmdp1']) AND !empty($_POST['newmdp1']) AND isset($_POST['newm
             <div id="main-menu" class="main-menu collapse navbar-collapse">
                 <ul class="nav navbar-nav">
                     <li class="active">
-                        <a href="index.html"> <i class="menu-icon fa fa-dashboard"></i>Bonjour <?php echo $user['prenom'];?></a>
+                        <a href="index.html"><i class="menu-icon fa fa-dashboard"></i>Bonjour <?php echo $user['prenom'];?></a>
                     </li>
                     <h3 class="menu-title">Menu</h3><!-- /.menu-title -->
                     <li class="menu-item-has-children dropdown">
@@ -141,11 +141,7 @@ if(isset($_POST['newmdp1']) AND !empty($_POST['newmdp1']) AND isset($_POST['newm
 
                     </li>
                     <li class="menu-item-has-children dropdown">
-                        <a href="depotcolis.php" class="dropdown-toggle"  aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-table"></i>Mes colis déposé</a>
-
-                    </li>
-                    <li class="menu-item-has-children dropdown">
-                        <a href="#" class="dropdown-toggle"  aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-th"></i>Messages</a>
+                        <a href="depotcolis.php" class="dropdown-toggle"  aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-table"></i>Envoyer votre colis</a>
 
                     </li>
 

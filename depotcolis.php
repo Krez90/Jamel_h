@@ -14,14 +14,16 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
         $depart = htmlspecialchars($_POST['depart']);
         $arriver = htmlspecialchars($_POST['reception']);
         $description = htmlspecialchars($_POST['description']);
-        $user = [$_SESSION['id']];
-        
-        
+       
     if(!empty($_POST['depart']) AND !empty($_POST['reception']) AND !empty($_POST['description'])){
-        
-        $insertcolis = $bdd->prepare("INSERT INTO annonces (depart, reception, description) VALUES (?,?,?)");
-        $insertcolis->execute([$depart, $arriver, $description]);
-        $erreur = "Votre colis à bien été déposé";
+
+            $insertcolis = $bdd->prepare("INSERT INTO annonces (depart, reception, description) VALUES (?,?,?)");
+            $insertcolis->execute([$depart, $arriver, $description]);
+            $erreur = "Votre colis a bien été déposé";
+            $last_id = $bdd->lastInsertId();
+            $last_id = intval($last_id);
+            $insert_liaison = $bdd->prepare("INSERT INTO clients_annonces (id_client, id_annonce) VALUES (?,?)");
+            $insert_liaison->execute([$_SESSION['id'], $last_id]);
         }
     }
 ?>
@@ -55,8 +57,6 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
 </head>
 
 <body>
-
-
     <!-- Left Panel -->
 
     <aside id="left-panel" class="left-panel">
@@ -73,7 +73,7 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
             <div id="main-menu" class="main-menu collapse navbar-collapse">
                 <ul class="nav navbar-nav">
                     <li class="active">
-                        <a href="index.html"> <i class="menu-icon fa fa-dashboard"></i>Bonjour <?php echo $user['prenom'];?></a>
+                        <a href="index.html"><i class="menu-icon fa fa-dashboard"></i>Bonjour <?php echo $user['prenom'];?></a>
                     </li>
                     <h3 class="menu-title">Menu</h3><!-- /.menu-title -->
                     <li class="menu-item-has-children dropdown">
@@ -81,11 +81,7 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
 
                     </li>
                     <li class="menu-item-has-children dropdown">
-                        <a href="" class="dropdown-toggle"  aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-table"></i>Mes colis déposé</a>
-
-                    </li>
-                    <li class="menu-item-has-children dropdown">
-                        <a href="#" class="dropdown-toggle"  aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-th"></i>Messages</a>
+                        <a href="" class="dropdown-toggle"  aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-table"></i>Envoyer votre colis</a>
 
                     </li>
 
@@ -96,7 +92,6 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
 
                     <li class="menu-item-has-children dropdown">
                         <a href="#" class="dropdown-toggle"  aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-th"></i>Mes paiements</a>
-
                     </li>
                 </ul>
             </div><!-- /.navbar-collapse -->
@@ -106,9 +101,9 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
     <!-- Left Panel -->
 
     <!-- Right Panel -->
-
     <div id="right-panel" class="right-panel">
 
+    
         <!-- Header-->
         <header id="header" class="header">
 
@@ -235,25 +230,7 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
 
         </header><!-- /header -->
         <!-- Header-->
-
-        <div class="breadcrumbs">
-            <div class="col-sm-4">
-                <div class="page-header float-left">
-                    <div class="page-title">
-                        <h1>Dashboard</h1>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-8">
-                <div class="page-header float-right">
-                    <div class="page-title">
-                        <ol class="breadcrumb text-right">
-                            <li class="active">Dashboard</li>
-                        </ol>
-                    </div>
-                </div>
-            </div>
-        </div>
+        
             <div class="col-md">
                 <div class="stat-text"><h1>Envoyer un colis</div><br>
                     <div class="card">
@@ -275,7 +252,7 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
                                         <input type="text" name="description" class="form-control" value="" placeholder="Description">
                                 </div>
 
-                                <button type="submit" name="continuer" class="btn btn-primary btn-flat m-b-30 m-t-30">Continuer</button>
+                                <button type="submit" name="continuer" class="btn btn-primary btn-flat m-b-30 m-t-30">Envoyer</button>
 
                             </form>
                             <?php

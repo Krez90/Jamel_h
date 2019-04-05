@@ -1,166 +1,94 @@
 <?php
 $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
 
-if(isset($_POST['inscription'])){
-    
-    $nom = htmlspecialchars($_POST['nom']);
-    $prenom = htmlspecialchars($_POST['prenom']);
-    $mail = htmlspecialchars($_POST['mail']);
-    $mail = strtolower($mail);
-    $mail2 = htmlspecialchars($_POST['mail2']);
-    $mail2 = strtolower($mail2);
-    $mdp = sha1($_POST['mdp']);
-    $mdp2 = sha1 ($_POST['mdp2']);
-        if(!empty($_POST['nom']) && !empty($_POST['prenom']) && !empty($_POST['mail']) && !empty($_POST['mail2']) && !empty($_POST['mdp']) && !empty($_POST['mdp2'])){
 
-        $nomlength = strlen($nom);
-        if($nomlength <= 255){
 
-        }else{
-            $erreur = "Vous avez dépasser la limite du nombre de caractère autorisé !";
-        }
-
-        $prenomlength = strlen($prenom);
-        if($prenomlength <= 255){
-
-        }else{
-            $erreur = "Vous avez dépasser la limite du nombre de caractère autorisé !";
-        }
-        
-        if($mail == $mail2){
-            
-        if(filter_var($mail, FILTER_VALIDATE_EMAIL)){
-
-        }
-        }else{
-            $erreur = "Vos adresses mails ne correspondent pas !";
-        }
-/////////////////////////////////////Vérification des doublons//////////////////////////////////////
-        $reqmail = $bdd->prepare("SELECT * FROM clients WHERE mail = ?");
-        $reqmail->execute([$mail]);
-        $mailexist = $reqmail->rowCount();
-        if($mailexist == 0){
-
-        if($mdp == $mdp2){
-            $insertmbr = $bdd->prepare("INSERT INTO clients (nom, prenom, mail, password) VALUES (?,?,?,?)");
-            $insertmbr->execute([$nom, $prenom, $mail, $mdp]);
-            $erreur = "Votre compte a bien été crée";
-            
-
-        }else{
-        $erreur = "Vos mots de passes ne correspondent pas !";
-        }
-
-        }else{
-        $erreur = "Adresse mail déjà utilisée ! ";
-        }
-    }
-        else{
-            $erreur = "Tous les champs doivent être complétés";
-        }
-    
-}
 ?>
 <!doctype html>
-
-<html class="no-js" lang="en">
-
-<head>
+<html lang="fr">
+  <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Sufee Admin - HTML5 Admin Template</title>
-    <meta name="description" content="Sufee Admin - HTML5 Admin Template">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Jekyll v3.8.5">
+    <title>Jamel_H</title>
+    <!-- Custom styles for this template -->
+    <link href="style.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+  <h5 class="my-0 mr-md-auto font-weight-normal">Jamal_H</h5>
+  <nav class="my-2 my-md-0 mr-md-3">
+    <a class="p-2 text-dark" href="#">A Propos</a>
+    <a class="p-2 text-dark" href="registre.php">Inscription</a>
+    <a class="p-2 text-dark" href="page-login.php">Connexion</a>
+    
+  </nav>
+ 
+</div>
+<div class="bg">
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+  <h1 class="display-4">Les livraisons du jours</h1>
+  <p class="lead">Pour visionner les livraisons du jour veuillez vous connecter.</p>
+</div>
 
-    <link rel="apple-touch-icon" href="apple-icon.png">
-    <link rel="shortcut icon" href="favicon.ico">
+<div class="container">
+  
+    <div class="card-deck mb-3 text-center">
+      <div class="card mb-4 shadow-sm">
+        <div class="card-header">
+          <h4 class="my-0 font-weight-normal">Annonces</h4>
 
-
-    <link rel="stylesheet" href="vendors/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="vendors/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="vendors/themify-icons/css/themify-icons.css">
-    <link rel="stylesheet" href="vendors/flag-icon-css/css/flag-icon.min.css">
-    <link rel="stylesheet" href="vendors/selectFX/css/cs-skin-elastic.css">
-
-    <link rel="stylesheet" href="assets/css/style.css">
-
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
-
-</head>
-
-<body class="bg-dark">
-
-
-    <div class="sufee-login d-flex align-content-center flex-wrap">
-        <div class="container">
-            <div class="login-content">
-                <div class="login-logo">
-                    <a href="index.html">
-                        <img class="align-content" src="images/logo.png" alt="">
-                    </a>
-                </div>
-                <div class="login-form">
-                    <form action="" method="POST">
-                        <div class="form-group">
-                            <label>Nom</label>
-                            <input type="text" name="nom" class="form-control" placeholder="">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Prenom</label>
-                            <input type="text" name="prenom" class="form-control" placeholder="">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Adresse Mail</label>
-                            <input type="email" name="mail" class="form-control" placeholder="">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Confirmation du Mail</label>
-                            <input type="email" name="mail2" class="form-control" placeholder="">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Mot de passe</label>
-                            <input type="password" name="mdp" class="form-control" placeholder="">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Vérification du mot passe</label>
-                            <input type="password" name="mdp2" class="form-control" placeholder="">
-                        </div>
-                        <?php
-        if(isset($erreur)){
-            echo $erreur;
-        } 
-        ?><br>
-                                    <div class="checkbox">
-                                        <label>
-                                <input type="checkbox"> Accepter les termes et la politique
-                            </label>
-                                    </div>
-                                    <button type="submit" name="inscription" class="btn btn-primary btn-flat m-b-30 m-t-30">Inscrivez-vous</button>
-                                    <div class="social-login-content">
-
-                                    </div>
-                                    <div class="register-link m-t-15 text-center">
-                                        <p>Vous avez déjà un compte ? <a href="page-login.php"> Se connecter</a></p>
-
-                                    </div>
-                    </form>
-                </div>
-            </div>
         </div>
+        <div class="card-body">
+          <h1 class="card-title pricing-card-title"><p>Annonce :<?php echo $req['depart, reception'];?></p> <small class="text-muted"></small></h1>
+          <ul class="list-unstyled mt-3 mb-4">
+            <li></li>
+          </ul>
+          <button type="button" class="btn btn-lg btn-block btn-outline-primary">Suivant</button>
+        </div>
+      </div>
     </div>
-
-
-    <script src="vendors/jquery/dist/jquery.min.js"></script>
-    <script src="vendors/popper.js/dist/umd/popper.min.js"></script>
-    <script src="vendors/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="assets/js/main.js"></script>
-
+</div>
+</div>
+  <footer class="pt-4 my-md-5 pt-md-5 border-top">
+    <div class="row">
+      <div class="col-12 col-md">
+        <img class="mb-2" src="/docs/4.3/assets/brand/bootstrap-solid.svg" alt="" width="24" height="24">
+        <small class="d-block mb-3 text-muted">&copy; 2017-2019</small>
+      </div>
+      <div class="col-6 col-md">
+        <h5>Features</h5>
+        <ul class="list-unstyled text-small">
+          <li><a class="text-muted" href="#">Cool stuff</a></li>
+          <li><a class="text-muted" href="#">Random feature</a></li>
+          <li><a class="text-muted" href="#">Team feature</a></li>
+          <li><a class="text-muted" href="#">Stuff for developers</a></li>
+          <li><a class="text-muted" href="#">Another one</a></li>
+          <li><a class="text-muted" href="#">Last time</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-md">
+        <h5>Resources</h5>
+        <ul class="list-unstyled text-small">
+          <li><a class="text-muted" href="#">Resource</a></li>
+          <li><a class="text-muted" href="#">Resource name</a></li>
+          <li><a class="text-muted" href="#">Another resource</a></li>
+          <li><a class="text-muted" href="#">Final resource</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-md">
+        <h5>About</h5>
+        <ul class="list-unstyled text-small">
+          <li><a class="text-muted" href="#">Team</a></li>
+          <li><a class="text-muted" href="#">Locations</a></li>
+          <li><a class="text-muted" href="#">Privacy</a></li>
+          <li><a class="text-muted" href="#">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
 
 </body>
-
 </html>

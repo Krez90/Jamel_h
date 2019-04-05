@@ -2,18 +2,21 @@
 session_start();
 
 $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
- if(isset($_GET['id']) && $_GET['id'] > 0){
-    $getid = intval($_GET['id']);
-    $requser = $bdd->prepare("SELECT * FROM clients WHERE id = ?");
-    $requser->execute([$getid]);
-    $userinfo = $requser->fetch();
-    
+ if(isset($_SESSION['id']) && !empty($_SESSION['id'])){
+    if(isset($_GET['id']) && $_GET['id'] > 0){
+        $getid = intval($_GET['id']);
+        $requser = $bdd->prepare("SELECT * FROM clients WHERE id = ?");
+        $requser->execute([$getid]);
+        $userinfo = $requser->fetch();
+
+        $colis = $bdd->prepare("SELECT * from clients, clients_annonces, annonces WHERE clients_annonces.id_client = ? AND clients.id = clients_annonces.id_client AND annonces.id = clients_annonces.id_annonce;
+        ");
+        $colis->execute([$getid]);
+        $mes_colis = $colis->fetchAll(PDO::FETCH_ASSOC);
+        
 ?>
 <!doctype html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
-<!--[if gt IE 8]><!-->
+
 <html class="no-js" lang="fr">
 <!--<![endif]-->
 
@@ -41,8 +44,7 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
 
 </head>
 
-<body>
-
+<body
 
     <!-- Left Panel -->
 
@@ -68,11 +70,7 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
 
                     </li>
                     <li class="menu-item-has-children dropdown">
-                        <a href="depotcolis.php" class="dropdown-toggle"  aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-table"></i>Mes colis déposé</a>
-
-                    </li>
-                    <li class="menu-item-has-children dropdown">
-                        <a href="#" class="dropdown-toggle"  aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-th"></i>Messages</a>
+                        <a href="depotcolis.php" class="dropdown-toggle"  aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-table"></i>Envoyer votre colis</a>
 
                     </li>
 
@@ -115,7 +113,7 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
                         <div class="dropdown for-notification">
                             <button class="btn btn-secondary dropdown-toggle" type="button" id="notification" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fa fa-bell"></i>
-                                <span class="count bg-danger">5</span>
+                                <span class="count bg-danger"></span>
                             </button>
                             <div class="dropdown-menu" aria-labelledby="notification">
                                 <p class="red">You have 3 Notification</p>
@@ -139,7 +137,7 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
                                 id="message"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="ti-email"></i>
-                                <span class="count bg-primary">9</span>
+                                <span class="count bg-primary"></span>
                             </button>
                             <div class="dropdown-menu" aria-labelledby="message">
                                 <p class="red">You have 4 Mails</p>
@@ -242,7 +240,6 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
             </div>
         </div>
 
-  
             <div class="col-xl-3 col-lg-6">
                 <section class="card">
                     <div class="twt-feed blue-bg">
@@ -258,40 +255,44 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
                             <div class="media-body">
                                 <h2 class="text-white display-6"><?php echo $userinfo['nom'];?><br>
                                     <?php echo $userinfo['prenom'];?><br></h2>
-                               
                             </div>
                         </div>
                     </div>
-                
-                    <div class="twt-write col-sm-12">
-                        <textarea placeholder="Write your Tweet and Enter" rows="1" class="form-control t-text-area"></textarea>
-                    </div>
-                    <footer class="twt-footer">
-                        <a href="#"><i class="fa fa-camera"></i></a>
-                        <a href="#"><i class="fa fa-map-marker"></i></a>
-                        Belfort, FR
-                        <span class="pull-right">
-                            90
-                        </span>
-                    </footer>
+
                 </section>
             </div>
 
-                            <!--Contenu du profil -->
-            <div class="col-xl-3 col-lg-6">
+            <!--Contenu du profil -->
+            <div class="col-xl col-lg">
                 <div class="card">
                     <div class="card-body">
                         <div class="stat-widget-one">
-                            <div class="stat-icon dib"><i class="fa fa-bell-o"></i></div>
+                            <div class="stat-icon dib"></div>
                             <div class="stat-content dib">
-                                <div class="stat-text">Notifications</div>
-                                <div class="stat-digit">1,012</div>
+                                <div class="stat-text"><h1>Mes envois<h1><br></div>
+                                <div class="stat-digit">
+                                    <?php 
+                                    foreach ($mes_colis as $key => $colis) { 
+                                        ?>
+                                        <div class="colis">
+                                            
+                                            <p class="depart">
+                                                Départ : <?php echo $colis['depart'] ?>
+                                            </p>
+                                            <p class="reception">
+                                                Réception : <?php echo $colis['reception'] ?>
+                                            </p>
+                                            <p class="description">
+                                                Description : <?php echo $colis['description'] ?>
+                                            </p><br>
+                                            </div>
+                                    <?php }; ?>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
+            </div><br>
 
             <div class="col-xl-3 col-lg-6">
                 <div class="card">
@@ -300,27 +301,12 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
                             <div class="stat-icon dib"><i class="fa fa-comments-o"></i></div>
                             <div class="stat-content dib">
                                 <div class="stat-text">Nouveaux Messages</div>
-                                <div class="stat-digit">961</div>
+                                <div class="stat-digit"></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="col-xl-3 col-lg-6">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="stat-widget-one">
-                            <div class="stat-icon dib"><i class="ti-layout-grid2 text-warning border-warning"></i></div>
-                            <div class="stat-content dib">
-                                <div class="stat-text">Active Projects</div>
-                                <div class="stat-digit">770</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
 
         </div> <!-- .content -->
     </div><!-- /#right-panel -->
@@ -345,7 +331,9 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
 
 </html>
 <?php
-}else{
-
+    }
+    else{
+        //404
+    }
 }
 ?>
