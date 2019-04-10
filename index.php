@@ -1,17 +1,16 @@
 <?php
 $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
 
-
+$colis = $bdd->query("SELECT * FROM annonces LIMIT 0, 10");
 
 ?>
+
 <!doctype html>
 <html lang="fr">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-    <meta name="generator" content="Jekyll v3.8.5">
     <title>Jamel_H</title>
     <!-- Custom styles for this template -->
     <link href="style.css" rel="stylesheet">
@@ -28,29 +27,26 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
  
 </div>
 <div class="bg">
-<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-  <h1 class="display-4">Les livraisons du jours</h1>
-  <p class="lead">Pour visionner les livraisons du jour veuillez vous connecter.</p>
-</div>
+  <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-4">Les livraisons du jours</h1>
+    <p class="lead">Pour visionner les livraisons du jour veuillez vous connecter.</p>
+  </div>
 
-<div class="container">
-  
-    <div class="card-deck mb-3 text-center">
-      <div class="card mb-4 shadow-sm">
-        <div class="card-header">
-          <h4 class="my-0 font-weight-normal">Annonces</h4>
-
-        </div>
-        <div class="card-body">
-          <h1 class="card-title pricing-card-title"><p>Annonce :<?php echo $req['depart, reception'];?></p> <small class="text-muted"></small></h1>
-          <ul class="list-unstyled mt-3 mb-4">
-            <li></li>
-          </ul>
-          <button type="button" class="btn btn-lg btn-block btn-outline-primary">Suivant</button>
+  <div class="container">
+      <div class="card-deck mb-3 text-center">
+        <div class="card mb-4 shadow-sm">
+          <div class="card-header">
+            <h4 class="my-0 font-weight-normal">Annonces</h4>
+          </div>
+          <div class="card-body">
+            <h4 class="card-title pricing-card-title"><?php while ($reponse = $colis->fetch()){ ?><?php echo $reponse['description'];?><br><?php };?> <small class="text-muted"></small></h4>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li></li>
+            </ul>
+          </div>
         </div>
       </div>
-    </div>
-</div>
+  </div>
 </div>
   <footer class="pt-4 my-md-5 pt-md-5 border-top">
     <div class="row">

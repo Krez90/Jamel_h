@@ -28,13 +28,15 @@ if(isset($_POST['inscription'])){
         }
         
         if($mail == $mail2){
+            if(filter_var($mail, FILTER_VALIDATE_EMAIL))
+            {
             
-        if(filter_var($mail, FILTER_VALIDATE_EMAIL)){
+            }
 
-        }
-        }else{
+        else{
             $erreur = "Vos adresses mails ne correspondent pas !";
         }
+    }
 /////////////////////////////////////Vérification des doublons//////////////////////////////////////
         $reqmail = $bdd->prepare("SELECT * FROM clients WHERE mail = ?");
         $reqmail->execute([$mail]);
@@ -55,6 +57,7 @@ if(isset($_POST['inscription'])){
         $erreur = "Adresse mail déjà utilisée ! ";
         }
     }
+
         else{
             $erreur = "Tous les champs doivent être complétés";
         }
@@ -99,7 +102,7 @@ if(isset($_POST['inscription'])){
                         <label for="mail">Mail :</label>
                     </td>
                     <td>
-                        <input type="email" name="mail" id="mail" placeholder="Votre mail" value="<?php if(isset($mail)) {echo $mail;}?>">
+                        <input type="email" name="mail"  placeholder="Votre mail" value="<?php if(isset($mail)) {echo $mail;}?>">
                     </td>
                 </tr>
                 <tr>
@@ -107,7 +110,7 @@ if(isset($_POST['inscription'])){
                         <label for="mail2">Confirmation du Mail :</label>
                     </td>
                     <td>
-                        <input type="email" name="mail2" id="mail2" placeholder="Confirmation du Mail" value="<?php if(isset($mail2)) {echo $mail2;}?>">
+                        <input type="email" name="mail2"  placeholder="Confirmation du Mail" value="<?php if(isset($mail2)) {echo $mail2;}?>">
                     </td>
                 </tr>
                 <tr>

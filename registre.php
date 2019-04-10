@@ -9,9 +9,9 @@ if(isset($_POST['inscription'])){
     $mail = strtolower($mail);
     $mail2 = htmlspecialchars($_POST['mail2']);
     $mail2 = strtolower($mail2);
-    $mdp = sha1($_POST['mdp']);
-    $mdp2 = sha1 ($_POST['mdp2']);
-        if(!empty($_POST['nom']) && !empty($_POST['prenom']) && !empty($_POST['mail']) && !empty($_POST['mail2']) && !empty($_POST['mdp']) && !empty($_POST['mdp2'])){
+    $mdp = password_hash($_POST['mdp'], PASSWORD_DEFAULT);
+    
+        if(!empty($_POST['nom']) && !empty($_POST['prenom']) && !empty($_POST['mail']) && !empty($_POST['mail2']) && !empty($_POST['mdp'])){
 
         $nomlength = strlen($nom);
         if($nomlength <= 255){
@@ -29,9 +29,9 @@ if(isset($_POST['inscription'])){
         
         if($mail == $mail2){
             
-        if(filter_var($mail, FILTER_VALIDATE_EMAIL)){
+            if(filter_var($mail, FILTER_VALIDATE_EMAIL)){
 
-        }
+            }
         }else{
             $erreur = "Vos adresses mails ne correspondent pas !";
         }
@@ -41,16 +41,11 @@ if(isset($_POST['inscription'])){
         $mailexist = $reqmail->rowCount();
         if($mailexist == 0){
 
-        if($mdp == $mdp2){
+        
             $insertmbr = $bdd->prepare("INSERT INTO clients (nom, prenom, mail, password) VALUES (?,?,?,?)");
             $insertmbr->execute([$nom, $prenom, $mail, $mdp]);
             $erreur = "Votre compte a bien été crée";
             
-
-        }else{
-        $erreur = "Vos mots de passes ne correspondent pas !";
-        }
-
         }else{
         $erreur = "Adresse mail déjà utilisée ! ";
         }
@@ -63,7 +58,7 @@ if(isset($_POST['inscription'])){
 ?>
 <!doctype html>
 
-<html class="no-js" lang="en">
+<html class="no-js" lang="fr">
 
 <head>
     <meta charset="utf-8">
@@ -124,11 +119,6 @@ if(isset($_POST['inscription'])){
                         <div class="form-group">
                             <label>Mot de passe</label>
                             <input type="password" name="mdp" class="form-control" placeholder="">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Vérification du mot passe</label>
-                            <input type="password" name="mdp2" class="form-control" placeholder="">
                         </div>
                         <?php
         if(isset($erreur)){

@@ -258,7 +258,7 @@ if(isset($_POST['newmdp1']) AND !empty($_POST['newmdp1']) AND isset($_POST['newm
                         <div class="user-menu dropdown-menu">
                             <a class="nav-link" href="profil.php?id=<?php echo $_SESSION['id']?>"><i class="fa fa-user"></i> Tableau bord</a>
 
-                            <a class="nav-link" href="#"><i class="fa fa-user"></i> Notifications <span class="count">13</span></a>
+                            <a class="nav-link" href="#"><i class="fa fa-user"></i> Notifications <span class="count"></span></a>
 
                             <a class="nav-link" href="#"><i class="fa fa-cog"></i> Profil</a>
 
