@@ -9,21 +9,31 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
      $requser->execute([$_SESSION['id']]);
      $user = $requser->fetch();
 
-    if(isset($_POST['continuer'])){
-///////////////////////////////////////////////PREPARATION INSERER COLIS BDD/////////////////////////////////////////        
+    if(isset($_POST['envoyer'])){
+///////////////////////////////////////////////PREPARATION INSERER COLIS BDD/////////////////////////////////////////
+        $kg = htmlspecialchars($_POST['kilogramme']);
+        $dimension = htmlspecialchars($_POST['dimension']);
+        $type = htmlspecialchars($_POST['type_objet']);
+        $livraison = htmlspecialchars($_POST['livraison']);
         $depart = htmlspecialchars($_POST['depart']);
         $arriver = htmlspecialchars($_POST['reception']);
         $description = htmlspecialchars($_POST['description']);
-       
-    if(!empty($_POST['depart']) AND !empty($_POST['reception']) AND !empty($_POST['description'])){
 
-            $insertcolis = $bdd->prepare("INSERT INTO annonces (depart, reception, description) VALUES (?,?,?)");
-            $insertcolis->execute([$depart, $arriver, $description]);
+       
+    if(!empty($_POST['kilogramme']) AND !empty($_POST['dimension']) AND !empty($_POST['type_objet']) AND !empty($_POST['livraison']) AND !empty($_POST['depart'])
+        AND !empty($_POST['reception']) AND !empty($_POST['description'])){
+
+            $insertcolis = $bdd->prepare("INSERT INTO annonces (kg, dimension, type_objet, mode_livraison, depart, reception, description) VALUES (?,?,?,?,?,?,?)");
+            $insertcolis->execute([$kg, $dimension, $type, $livraison, $depart, $arriver, $description]);
             $erreur = "Votre colis a bien été déposé";
             $last_id = $bdd->lastInsertId();
             $last_id = intval($last_id);
             $insert_liaison = $bdd->prepare("INSERT INTO clients_annonces (id_client, id_annonce) VALUES (?,?)");
             $insert_liaison->execute([$_SESSION['id'], $last_id]);
+            
+            
+        }else{
+            $erreur = "Tous les champs doivent être remplis";
         }
     }
 ?>
@@ -204,12 +214,49 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
                             <form method="POST">
 
                                 <div class="form-group">
-                                    <label>Départ du colis ?</label>
+                                <div class="info"><h1>Informations colis et livraisons</h1></div><br>
+
+                                <div class="form-group">
+                                    <label>Kg :</label>
+                                        <input type="number" name="kilogramme" class="form-control" value="" placeholder="Kilogramme">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="dimensions">Dimensions du colis</label>
+                                        <input list="dimensions" id="monNavigateur" class="form-control" name="dimension"/>
+                                        <datalist id="dimensions">
+                                        <option value="Documents">
+                                        <option value="Petit colis">
+                                        <option value="Gros colis">
+                                        </datalist>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="type_objet">Type d'objet</label>
+                                        <input list="type_objet" id="monNavigateur" class="form-control" name="type_objet"/>
+                                        <datalist id="type_objet">
+                                        <option value="Standard">
+                                        <option value="Fragile">
+                                        <option value="Précieux">
+                                        </datalist>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="livraison">Mode de livraison</label>
+                                        <input list="livraison" id="monNavigateur" class="form-control" name="livraison"/>
+                                        <datalist id="livraison">
+                                        <option value="Entreprise">
+                                        <option value="Domicile">
+                                        
+                                        </datalist>
+                                </div>
+
+                                    <label>Départ du colis </label>
                                         <input type="text" name="depart" class="form-control" value="" placeholder="Exemple : 12 rue clé des champs ou hôtel stenda ">
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Réception du colis ?</label>
+                                    <label>Réception du colis </label>
                                         <input type="text" name="reception" class="form-control" value="" placeholder="Exemple : 12 rue clé des champs ou hôtel stenda">
                                 </div>
 
@@ -218,7 +265,9 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
                                         <input type="text" name="description" class="form-control" value="" placeholder="Description">
                                 </div>
 
-                                <button type="submit" name="continuer" class="btn btn-primary btn-flat m-b-30 m-t-30">Envoyer</button>
+                                
+
+                                <button type="submit" name="envoyer" class="btn btn-primary btn-flat m-b-30 m-t-30">Envoyer</button>
 
                             </form>
                             <?php

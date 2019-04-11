@@ -240,7 +240,7 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
                                             <p class="description">
                                                 Description : <?php echo $colis['description'] ?>
                                             </p><br>
-                                            <button type="button" name="supprimer" class="btn btn-warning">Modifier</button>
+                                            
                                             <button type="submit" name="idAnnonces" value="<?=$colis['id']?>" class="btn btn-danger">Supprimer</button>
                                         </form><br>
                                     <?php }; ?>

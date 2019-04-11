@@ -17,7 +17,7 @@ $colis = $bdd->query("SELECT * FROM annonces LIMIT 0, 10");
   </head>
   <body>
     <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
-  <h5 class="my-0 mr-md-auto font-weight-normal">Jamal_H</h5>
+  <h5 class="my-0 mr-md-auto font-weight-normal">Jamel_H</h5>
   <nav class="my-2 my-md-0 mr-md-3">
     <a class="p-2 text-dark" href="#">A Propos</a>
     <a class="p-2 text-dark" href="registre.php">Inscription</a>
@@ -39,10 +39,7 @@ $colis = $bdd->query("SELECT * FROM annonces LIMIT 0, 10");
             <h4 class="my-0 font-weight-normal">Annonces</h4>
           </div>
           <div class="card-body">
-            <h4 class="card-title pricing-card-title"><?php while ($reponse = $colis->fetch()){ ?><?php echo $reponse['description'];?><br><?php };?> <small class="text-muted"></small></h4>
-            <ul class="list-unstyled mt-3 mb-4">
-              <li></li>
-            </ul>
+            <h4 class="card-title pricing-card-title"><?php while ($reponse = $colis->fetch()){ ?><?php echo $reponse['depart'];?><br><?php };?> <small class="text-muted"></small></h4>
           </div>
         </div>
       </div>
