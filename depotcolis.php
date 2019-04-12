@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-$bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
+require "connect_bdd.php";
 
     if(isset($_SESSION['id'])){
 
@@ -18,13 +18,14 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
         $depart = htmlspecialchars($_POST['depart']);
         $arriver = htmlspecialchars($_POST['reception']);
         $description = htmlspecialchars($_POST['description']);
+        $prix = htmlspecialchars($_POST['prix']);
 
        
-    if(!empty($_POST['kilogramme']) AND !empty($_POST['dimension']) AND !empty($_POST['type_objet']) AND !empty($_POST['livraison']) AND !empty($_POST['depart'])
+    if(!empty($_POST['kilogramme']) AND !empty($_POST['dimension']) AND !empty($_POST['type_objet']) AND !empty($_POST['livraison']) AND !empty($_POST['depart'] AND !empty(['prix']))
         AND !empty($_POST['reception']) AND !empty($_POST['description'])){
 
-            $insertcolis = $bdd->prepare("INSERT INTO annonces (kg, dimension, type_objet, mode_livraison, depart, reception, description) VALUES (?,?,?,?,?,?,?)");
-            $insertcolis->execute([$kg, $dimension, $type, $livraison, $depart, $arriver, $description]);
+            $insertcolis = $bdd->prepare("INSERT INTO annonces (kg, dimension, type_objet, mode_livraison, depart, reception, description, prix) VALUES (?,?,?,?,?,?,?,?)");
+            $insertcolis->execute([$kg, $dimension, $type, $livraison, $depart, $arriver, $description, $prix]);
             $erreur = "Votre colis a bien été déposé";
             $last_id = $bdd->lastInsertId();
             $last_id = intval($last_id);
@@ -83,7 +84,7 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
             <div id="main-menu" class="main-menu collapse navbar-collapse">
                 <ul class="nav navbar-nav">
                     <li class="active">
-                        <a href="index.html"><i class="menu-icon fa fa-dashboard"></i>Bonjour <?php echo $user['prenom'];?></a>
+                        <a href="profil.php?id=<?php echo $_SESSION['id']?>"><i class="menu-icon fa fa-dashboard"></i>Bonjour <?php echo $user['prenom'];?></a>
                     </li>
                     <h3 class="menu-title">Menu</h3><!-- /.menu-title -->
                     <li class="menu-item-has-children dropdown">
@@ -206,6 +207,15 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
 
         </header><!-- /header -->
         <!-- Header-->
+        <div class="breadcrumbs">
+            <div class="col-sm-4">
+                <div class="page-header float-left">
+                    <div class="page-title">
+                        <h1>Tableau de bord</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
         
             <div class="col-md">
                 <div class="stat-text"><h1>Envoyer un colis</div><br>
@@ -263,6 +273,11 @@ $bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
                                 <div class="form-group">
                                     <label>Description du colis</label>
                                         <input type="text" name="description" class="form-control" value="" placeholder="Description">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Prix proposé</label>
+                                        <input type="number" name="prix" class="form-control" value="" placeholder="Prix">
                                 </div>
 
                                 

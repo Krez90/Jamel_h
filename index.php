@@ -1,5 +1,5 @@
 <?php
-$bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
+require "connect_bdd.php";
 
 $colis = $bdd->query("SELECT * FROM annonces LIMIT 0, 10");
 
@@ -39,7 +39,7 @@ $colis = $bdd->query("SELECT * FROM annonces LIMIT 0, 10");
             <h4 class="my-0 font-weight-normal">Annonces</h4>
           </div>
           <div class="card-body">
-            <h4 class="card-title pricing-card-title"><?php while ($reponse = $colis->fetch()){ ?><?php echo $reponse['depart'];?><br><?php };?> <small class="text-muted"></small></h4>
+            <h6 class="card-title pricing-card-title"><?php while ($reponse = $colis->fetch()){ ?><?php echo $reponse['depart'];?><br><?php };?> <small class="text-muted"></small></h6>
           </div>
         </div>
       </div>

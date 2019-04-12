@@ -1,18 +1,27 @@
 <?php
-$bdd = new PDO('mysql:host=127.0.0.1;dbname=jamel_h;charset=utf8','root','');
+require "connect_bdd.php";
 
-if(isset($_SESSION['id']) && !empty($_SESSION['id'])){
-    if(isset($_GET['idAnnonces'])){
+$query = $bdd->prepare('SELECT id FROM annonces');
 
-        $query = $bdd->prepare("DELETE FROM annonces WHERE id=?");
-        $query->execute($_GET['idAnnonces']);
+try {
+	$query->execute();
+} catch (Exception $e) { /** Un genre de if else qui captures des erreurs. On peut ensuite faire un traitement particulier avec ces erreurs *
+*/
+	echo "Error :" + $e;
+	die();
+}
 
-    }else{
-        
-        }
-};
+if (isset($_GET['idAnnonces']))
+{
+	$query = $bdd->prepare('DELETE FROM annonces WHERE annonces.id = :monId');
 
+	$query->bindParam(":monId", $_GET['idAnnonces']);
 
-// header('Location: http://localhost/jamel_h/profil.php');
-header("Cache-Control: no-cache, must-revalidate");
-exit;
+	try {		
+		$query->execute();
+		header('Location: http://localhost/jamel_h/depotcolis.php');
+	} catch (Exception $e) {
+		
+		echo "Error " . $e;
+	}
+}
