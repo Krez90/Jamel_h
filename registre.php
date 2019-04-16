@@ -9,7 +9,7 @@ if(isset($_POST['inscription'])){
     $mail = strtolower($mail);
     $mail2 = htmlspecialchars($_POST['mail2']);
     $mail2 = strtolower($mail2);
-    $mdp = password_hash($_POST['mdp'], PASSWORD_DEFAULT);
+    $mdp = sha1($_POST['mdp']);
     
         if(!empty($_POST['nom']) && !empty($_POST['prenom']) && !empty($_POST['mail']) && !empty($_POST['mail2']) && !empty($_POST['mdp'])){
 
