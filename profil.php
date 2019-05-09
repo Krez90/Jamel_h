@@ -171,6 +171,7 @@ require "connect_bdd.php";
             </div>
 
         </header><!-- /header -->
+        
         <!-- Header-->
 
         <div class="breadcrumbs">
